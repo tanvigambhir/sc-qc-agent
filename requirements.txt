@@ -1,0 +1,9 @@
+scanpy>=1.10
+anndata>=0.10
+numpy
+pandas
+matplotlib
+tabulate
+anthropic>=0.40
+requests
+pytest

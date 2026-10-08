@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+data/
+benchmark*/
+*.h5ad
+.env
+# results/ is committed on purpose once you have real runs
