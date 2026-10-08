@@ -92,6 +92,7 @@ def _finalize(expr: pd.DataFrame, obs: pd.DataFrame, rng) -> ad.AnnData:
     a.obs = a.obs[order]
     for c in ["cell_type", "patient", "sample", "timepoint", "sex", "batch"]:
         a.obs[c] = a.obs[c].astype(str)
+    a.obs[QC_COLS] = a.obs[QC_COLS].astype("float64")
     return a
 
 
