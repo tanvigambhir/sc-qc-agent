@@ -56,7 +56,7 @@ class AnthropicClient:
 
     def chat(self, system, messages, tools=None) -> Reply:
         kw = dict(model=self.model, max_tokens=self.max_tokens, system=system,
-                  messages=self._convert(messages), temperature=0)
+                  messages=self._convert(messages))
         if tools:
             kw["tools"] = [{"name": t["name"], "description": t["description"],
                             "input_schema": t["parameters"]} for t in tools]

@@ -45,7 +45,7 @@ A non-LLM rule-based agent (`rules`) runs the same tools with fixed thresholds
 as a reference for "is this bug detectable from the tool outputs at all?"
 
 **Models.** Claude (`claude-sonnet-5-5` by default, set `QC_ANTHROPIC_MODEL`)
-and Qwen2.5-7B-Instruct via Ollama (`QC_OLLAMA_MODEL`). Temperature 0.
+and Qwen2.5-7B-Instruct via Ollama (`QC_OLLAMA_MODEL`). Qwen runs at temperature 0; Claude runs at its default sampling settings.
 
 **Metrics.** Detection rate, false-alarm rate on clean datasets, precision,
 exact-match rate, unsupported-evidence rate (reported evidence citing numbers
@@ -80,7 +80,7 @@ Background noise on clean pbmc3k (from `scripts/inspect_clean.py`): TODO
 - Injected bugs are cleaner than real ones (e.g. a perfect 1:1 batch/patient map).
 - The unsupported-evidence metric can flag correctly derived numbers (a percent
   computed from two counts); failures were spot-checked by hand.
-- One run per condition at temperature 0; no variance estimate.
+- One run per condition; no variance estimate (Claude is not run at temperature 0, so reruns can differ).
 
 ## Reproduce
 
