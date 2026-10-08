@@ -54,10 +54,9 @@ hallucinated evidence), tool calls and tokens per dataset.
 
 ## Prediction (write before running)
 
-> _Condition 3 vs 2, false alarms:_ TODO
-> _Condition 3 vs 2, detection:_ TODO
-> _Which bug type will be hardest, and why:_ TODO
-
+> _Condition 3 vs 2, false alarms:_ Fewer. Requiring a confirming tool call before a bug is reported should filter out guesses that the tool outputs don't support.
+> _Condition 3 vs 2, detection:_ About the same. Verification can only remove findings, and I expect the model to rarely reverse a draft conclusion, so few real bugs should be dropped.
+> _Which bug type will be hardest, and why:_ `low_quality_cells`. Spotting damaged cells means judging QC thresholds across several metrics, and the clean data already contains 25 high-count outlier cells that could blur the line between a real problem and normal variation.
 ## Results
 
 > TODO after running. Paste `results/summary.md` tables and the two figures:
