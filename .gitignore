@@ -6,3 +6,5 @@ benchmark*/
 *.h5ad
 .env
 # results/ is committed on purpose once you have real runs
+.DS_Store
+.venv/

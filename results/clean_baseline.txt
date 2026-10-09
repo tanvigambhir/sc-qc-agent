@@ -1,0 +1,63 @@
+
+=== summarize_metadata({}) ===
+2638 cells, 17 genes stored, 9 metadata columns.
+- cell_type (categorical, 8 unique): CD4 T cells=1144, CD14+ Monocytes=480, B cells=342, CD8 T cells=316, NK cells=154, FCGR3A+ Monocytes=150, Dendritic cells=37, Megakaryocytes=15
+- patient (categorical, 6 unique): P4=470, P6=461, P5=444, P2=436, P3=421, P1=406
+- sample (categorical, 12 unique): P4_pre=239, P5_post=233, P6_post=233, P4_post=231, P2_post=229, P6_pre=228, P3_post=215, P5_pre=211, ... (+4 more)
+- timepoint (categorical, 2 unique): post=1340, pre=1298
+- sex (categorical, 2 unique): M=1367, F=1271
+- batch (categorical, 3 unique): B1=908, B3=866, B2=864
+- n_genes (numeric): min=212, median=820, max=2455
+- n_counts (numeric): min=556, median=2213, max=8875
+- percent_mito (numeric): min=0, median=0.02011, max=0.04994
+
+=== check_qc_metrics({}) ===
+Thresholds: percent_mito>0.1, n_genes<200, n_genes>2500 (percent_mito is a fraction 0-1).
+Flagged cells: 0 of 2638 (0.0%).
+  high mito: 0; low genes: 0; high genes (doublet-like): 0
+  n_counts >5 MAD above median (possible doublets, informational): 25
+
+=== find_case_collisions({}) ===
+No case-insensitive name collisions among 9 metadata columns or 17 gene names.
+
+=== check_label_consistency({'col_a': 'batch', 'col_b': 'patient'}) ===
+batch (3 values) x patient (6 values). Cramer's V = 0.500.
+Each batch value maps to 4-4 patient values; each patient value maps to 2-2 batch values.
+Perfect one-to-one mapping: False. batch nested in patient: False.
+Cross-tab (cell counts):
+patient   P1   P2   P3   P4   P5   P6
+batch                                
+B1       207  229    0  239  233    0
+B2       199    0  206  231    0  228
+B3         0  207  215    0  211  233
+
+=== compare_groups({'column': 'sample'}) ===
+12 groups in 'sample'.
+         n_cells  med_n_genes  med_n_counts  med_percent_mito  frac_XIST+  frac_RPS4Y1+ recorded_sex
+sample                                                                                              
+P1_post      199        828.0        2212.0             0.019       0.869         0.000            F
+P1_pre       207        820.0        2191.0             0.020       0.860         0.010            F
+P2_post      229        822.0        2252.0             0.020       0.031         0.795            M
+P2_pre       207        812.0        2291.0             0.021       0.024         0.826            M
+P3_post      215        824.0        2196.0             0.020       0.842         0.023            F
+P3_pre       206        839.5        2295.5             0.020       0.835         0.029            F
+P4_post      231        813.0        2193.0             0.021       0.009         0.823            M
+P4_pre       239        813.0        2188.0             0.021       0.025         0.757            M
+P5_post      233        795.0        2106.0             0.021       0.893         0.009            F
+P5_pre       211        815.0        2256.0             0.020       0.891         0.009            F
+P6_post      233        823.0        2273.0             0.019       0.017         0.768            M
+P6_pre       228        809.5        2153.0             0.021       0.018         0.842            M
+
+=== run_marker_check({'cluster_col': 'cell_type'}) ===
+Marker check on 'cell_type': for each label, which reference cell type's markers score highest (z-scored mean expression across labels).
+0 of 8 labels mismatch their expected markers.
+- B cells (n=342): best=B cells (+2.64), own-markers score=+2.64 -> MATCH
+- CD14+ Monocytes (n=480): best=CD14+ Monocytes (+1.99), own-markers score=+1.99 -> MATCH
+- CD4 T cells (n=1144): best=CD4 T cells (+1.82), own-markers score=+1.82 -> MATCH
+- CD8 T cells (n=316): best=CD8 T cells (+2.26), own-markers score=+2.26 -> MATCH
+- Dendritic cells (n=37): best=Dendritic cells (+2.16), own-markers score=+2.16 -> MATCH
+- FCGR3A+ Monocytes (n=150): best=FCGR3A+ Monocytes (+2.45), own-markers score=+2.45 -> MATCH
+- Megakaryocytes (n=15): best=Megakaryocytes (+2.65), own-markers score=+2.65 -> MATCH
+- NK cells (n=154): best=NK cells (+2.43), own-markers score=+2.43 -> MATCH
+
+Rule-based reference on clean data reports: nothing

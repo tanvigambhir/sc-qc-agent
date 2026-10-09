@@ -91,6 +91,8 @@ def main():
     ap.add_argument("--runs", default="results/runs.jsonl")
     ap.add_argument("--benchmark", default="benchmark")
     ap.add_argument("--out", default="results")
+    ap.add_argument("--matched", action="store_true",
+                    help="compare conditions only on datasets every condition completed")
     args = ap.parse_args()
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -101,6 +103,27 @@ def main():
         r = json.loads(line)
         runs[(r["dataset"], r["model"], r["condition"])] = r  # last write wins
     runs = list(runs.values())
+
+    # Runs that crashed (timeouts, server errors) produced no report. Scoring
+    # them would count infrastructure failures as missed bugs, so drop them
+    # and report how many were dropped.
+    errored = [r for r in runs if r.get("error")]
+    runs = [r for r in runs if not r.get("error")]
+    excluded = defaultdict(int)
+    for r in errored:
+        excluded[(r["model"], r["condition"])] += 1
+
+    # --matched: per model, keep only datasets where every condition finished,
+    # so conditions are compared on identical datasets.
+    if args.matched:
+        done = defaultdict(set)
+        for r in runs:
+            done[(r["model"], r["dataset"])].add(r["condition"])
+        conds_per_model = defaultdict(set)
+        for r in runs:
+            conds_per_model[r["model"]].add(r["condition"])
+        runs = [r for r in runs
+                if done[(r["model"], r["dataset"])] == conds_per_model[r["model"]]]
 
     rows, type_rows, fails = [], [], []
     verify_rows = []
@@ -135,7 +158,7 @@ def main():
             "mean_tokens": sum(s["tokens"] for s in S) / len(S),
             "parse_error_rate": sum(s["parse_error"] for s in S) / len(S),
             "step_cap_rate": sum(s["step_cap"] for s in S) / len(S),
-            "run_errors": sum(s["error"] for s in S),
+            "runs_excluded_errors": excluded[(model, cond)],
         })
         for bt, (origin, has_tool) in BUG_TYPES.items():
             with_bt = [(r, s) for r, s, t in items if bt in t]
@@ -162,8 +185,12 @@ def main():
     # ------------------------------------------------------------ summary.md
     show = m[["model", "condition", "n_datasets", "detection_rate", "false_alarm_rate_clean",
               "precision", "exact_match", "unsupported_evidence_rate", "mean_tool_calls",
-              "mean_tokens"]].copy()
-    md = ["# Results\n", f"Benchmark: `{args.benchmark}`, {len(key)} datasets.\n",
+              "mean_tokens", "runs_excluded_errors"]].copy()
+    md = ["# Results\n", f"Benchmark: `{args.benchmark}`, {len(key)} datasets."
+          + (" Matched mode: each model's conditions are compared on the same datasets."
+             if args.matched else "") + "\n",
+          f"Runs excluded for crashing (timeouts/server errors): {len(errored)}."
+          " `n_datasets` counts only completed runs.\n",
           "## Headline metrics\n", show.round(3).to_markdown(index=False), "\n"]
     if not bt.empty:
         piv = bt.pivot_table(index=["bug_type", "dedicated_tool"],

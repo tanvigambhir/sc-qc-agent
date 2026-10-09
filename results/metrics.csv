@@ -1,0 +1,8 @@
+model,condition,n_datasets,detection_rate,false_alarm_rate_clean,precision,spurious_per_dataset,exact_match,unsupported_evidence_rate,mean_tool_calls,mean_tokens,parse_error_rate,step_cap_rate,runs_excluded_errors
+claude,no_tools,40,0.6046511627906976,0.0,1.0,0.0,0.575,0.038461538461538464,0.0,1443.95,0.0,0.0,0
+claude,tools,40,1.0,0.0,1.0,0.0,1.0,0.0,6.475,8404.975,0.0,0.0,0
+claude,tools_verify,40,1.0,0.0,1.0,0.0,1.0,0.023255813953488372,8.425,16932.45,0.0,0.0,0
+qwen,no_tools,40,0.37209302325581395,1.0,0.4,0.6,0.15,0.0,0.0,762.55,0.0,0.0,0
+qwen,tools,36,0.4594594594594595,1.0,0.4722222222222222,0.5277777777777778,0.19444444444444445,0.0,17.444444444444443,58794.25,0.0,0.0,4
+qwen,tools_verify,8,0.0,0.0,0.0,0.125,0.5,0.0,51.5,368590.25,0.0,0.875,4
+rules,rules,40,1.0,0.0,1.0,0.0,1.0,0.0,5.0,0.0,0.0,0.0,0
