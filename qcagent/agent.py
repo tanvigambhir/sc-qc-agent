@@ -90,6 +90,16 @@ def _loop(client, adata, messages, log, phase, max_steps):
         log["steps"] += 1
         messages.append({"role": "assistant", "content": r.text, "tool_calls": r.tool_calls})
         if not r.tool_calls:
+            if not r.text.strip():
+                # Empty reply: ask once for the report (tools off). Never fired for Claude.
+                log["empty_nudges"] = log.get("empty_nudges", 0) + 1
+                messages.append({"role": "user",
+                                 "content": "Your last reply was empty. " + REPORT_FORMAT})
+                r = client.chat(SYSTEM, messages, None)
+                log["in_tokens"] += r.in_tokens
+                log["out_tokens"] += r.out_tokens
+                log["steps"] += 1
+                messages.append({"role": "assistant", "content": r.text, "tool_calls": []})
             return r.text, calls_this_phase
         for tc in r.tool_calls:
             out = call_tool(adata, tc["name"], tc["args"])

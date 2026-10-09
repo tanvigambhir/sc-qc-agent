@@ -91,7 +91,7 @@ class OllamaClient:
     def chat(self, system, messages, tools=None) -> Reply:
         import requests
         body = {"model": self.model, "messages": self._convert(system, messages),
-                "stream": False, "options": {"temperature": 0, "num_ctx": 16384}}
+                "stream": False, "options": {"temperature": 0, "num_ctx": 32768}}
         if tools:
             body["tools"] = [{"type": "function", "function": t} for t in tools]
         r = requests.post(f"{self.host}/api/chat", json=body, timeout=600)

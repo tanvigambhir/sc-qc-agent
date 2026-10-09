@@ -100,3 +100,14 @@ def test_unsupported_numbers():
     src = "Flagged cells: 232 of 2600 (8.9%). frac 0.861"
     assert unsupported_numbers("232 cells (8.9%), 86% XIST+", src) == []
     assert unsupported_numbers("517 cells flagged", src) == ["517"]
+
+
+def test_empty_reply_gets_one_nudge(clean):
+    client = ScriptedClient([
+        Reply("", [_call("check_qc_metrics")]),
+        Reply("", []),                       # empty final answer
+        Reply('{"bugs": [{"type": "low_quality_cells"}]}'),
+    ])
+    log = run_agent(client, clean, "tools")
+    assert log["empty_nudges"] == 1
+    assert [b["type"] for b in log["bugs"]] == ["low_quality_cells"]
